@@ -2,32 +2,31 @@
 
 **Network Discovery & Port Scanning Tool**
 
-A lightweight, multi-threaded Python tool for discovering active hosts on a network and scanning for open ports and running services. Built for network administrators, IT support professionals, and cybersecurity learners.
+> **Note:** This is a re-upload. The original repo was uploaded to my private account and had some issues so I cleaned what i could and pushed it again.
+
+A Python tool I built to scan local networks, find active devices, and check what ports are open on them. Pretty useful for learning how networks actually work, or just seeing what's going on in your home setup.
+
+No external packages needed - it runs on Python's built-in libraries only.
 
 ---
 
-## Features
+## What It Does
 
-- **Host Discovery** — Scan entire subnets using ICMP ping or TCP connect methods
-- **Port Scanning** — Identify open ports with service detection and banner grabbing
-- **Multi-threaded** — Fast concurrent scanning with configurable thread count
-- **Custom Port Ranges** — Scan common ports, extended lists, or specify your own
-- **Service Identification** — Automatically maps 50+ well-known ports to service names
-- **Banner Grabbing** — Extracts service version info from open ports
-- **Report Generation** — Exports results in JSON, CSV, and plain text formats
-- **Cross-Platform** — Works on Windows, macOS, and Linux
-- **Colored Output** — Clean, readable terminal interface with progress indicators
+- **Finds devices** on your network (using ping or TCP connect)
+- **Scans ports** and tells you what services are running (HTTP, SSH, SMB, etc.)
+- **Grabs banners** - tries to identify what software is behind each open port
+- **Generates reports** in JSON, CSV, and plain text so you can review results later
+- **Multi-threaded** - scans fast by checking multiple hosts/ports at the same time
+- Works on **Windows, macOS, and Linux**
 
 ---
 
 ## Prerequisites
 
-- **Python 3.8+** — Download from [python.org](https://www.python.org/downloads/)
-- **Git** (optional) — Download from [git-scm.com](https://git-scm.com/downloads)
+- **Python 3.8+** - Download from [python.org](https://www.python.org/downloads/)
+- **Git** (optional) - Download from [git-scm.com](https://git-scm.com/downloads)
 
-No external Python packages required — the tool uses only the standard library.
-
-## Installation
+## Getting Started
 
 **Option 1: Clone with Git**
 
@@ -41,89 +40,67 @@ python netscanner.py --help
 
 1. Go to the [repository page](https://github.com/osama-l/netscanner)
 2. Click the green **Code** button → **Download ZIP**
-3. Extract the ZIP and open a terminal in the extracted folder
+3. Extract it, open a terminal in the folder, and run:
 
 ```bash
-cd netscanner
 python netscanner.py --help
 ```
 
 ---
 
-## Usage
+## How to Use It
 
-### Quick Start
+### Basic Scans
 
 ```bash
-# Discover active hosts on your local network
+# Find all active devices on your network
 python netscanner.py -t 192.168.1.0/24
 
-# Discover hosts AND scan their open ports
+# Find devices AND check their open ports
 python netscanner.py -t 192.168.1.0/24 --scan-ports
 
-# Scan a single host
+# Scan just one device
 python netscanner.py -t 192.168.1.1 --scan-ports
 ```
 
-### Host Discovery Methods
+Not sure what your network range is? Run `ipconfig` (Windows) or `ifconfig` (Mac/Linux) and look for your IPv4 address. If it's `192.168.1.X`, your network is `192.168.1.0/24`.
+
+### If Ping Doesn't Work
+
+Some firewalls block ping. Try TCP mode instead:
 
 ```bash
-# Default: ICMP ping (may require admin/root on some systems)
-python netscanner.py -t 192.168.1.0/24 -m ping
-
-# TCP connect (works when ICMP is blocked by firewalls)
 python netscanner.py -t 192.168.1.0/24 -m tcp
 ```
 
-### Port Scanning Options
+### Scanning Specific Ports
 
 ```bash
-# Scan common ports (24 well-known ports)
-python netscanner.py -t 192.168.1.0/24 --scan-ports
-
-# Scan extended port list (50+ ports)
-python netscanner.py -t 192.168.1.0/24 --scan-ports --extended
-
-# Scan specific ports
+# Scan only certain ports
 python netscanner.py -t 192.168.1.0/24 --scan-ports --ports 22,80,443,3389
 
-# Scan a port range
+# Scan a range
 python netscanner.py -t 192.168.1.0/24 --scan-ports --ports 1-1024
 
-# Mix individual ports and ranges
-python netscanner.py -t 192.168.1.0/24 --scan-ports --ports 22,80,100-200,443
+# Use the extended port list (50+ ports)
+python netscanner.py -t 192.168.1.0/24 --scan-ports --extended
 ```
 
-### Performance Tuning
+### Other Options
 
 ```bash
-# Increase threads for faster scanning
+# More threads = faster scanning
 python netscanner.py -t 192.168.1.0/24 --scan-ports --threads 100
 
-# Increase timeout for slow networks
-python netscanner.py -t 10.0.0.0/24 --scan-ports --timeout 3
+# Longer timeout for slow networks
+python netscanner.py -t 192.168.1.0/24 --scan-ports --timeout 3
 
-# Quiet mode — minimal output
-python netscanner.py -t 192.168.1.0/24 --scan-ports -q
-```
+# No colors (if your terminal shows weird characters like ←[92m)
+python netscanner.py -t 192.168.1.0/24 --scan-ports --no-color
 
-### Output & Reports
-
-```bash
-# Reports are saved automatically to ./reports/
-python netscanner.py -t 192.168.1.0/24 --scan-ports
-
-# Custom output directory
+# Save reports to a custom folder
 python netscanner.py -t 192.168.1.0/24 --scan-ports -o ./my-scans
-
-# Disable colored output (useful for piping)
-python netscanner.py -t 192.168.1.0/24 --no-color
 ```
-
-Each scan generates three report files:
-- `scan_YYYYMMDD_HHMMSS.json` — Structured data for programmatic use
-- `scan_YYYYMMDD_HHMMSS.csv` — Spreadsheet-compatible format
-- `scan_YYYYMMDD_HHMMSS.txt` — Human-readable summary
 
 ---
 
@@ -136,17 +113,12 @@ Each scan generates three report files:
   Network Discovery & Port Scanning Tool
 
 [*] Scanning 254 hosts on 192.168.1.0/24 (method: ping)
-    Threads: 50 | Timeout: 1s
-
-[✓] Host discovery completed in 5.2s
 
 [✓] Found 4 active host(s):
     192.168.1.1 (router.local)
     192.168.1.10
     192.168.1.25 (desktop-pc.local)
     192.168.1.30
-
-[*] Starting port scan on 4 host(s)...
 
   Scanning 24 ports on 192.168.1.1
     ●    80/tcp  HTTP             HTTP/1.1 200 OK
@@ -157,15 +129,7 @@ Each scan generates three report files:
   SCAN SUMMARY
 ══════════════════════════════════════════════════════
   Target     : 192.168.1.0/24
-  Date       : 2025-03-15 14:30:22
-  Duration   : 12.4s
   Hosts Found: 4
-──────────────────────────────────────────────────────
-  192.168.1.1 (router.local) — 3 open
-  192.168.1.10 — no open ports
-  192.168.1.25 (desktop-pc.local) — 2 open
-  192.168.1.30 — 1 open
-──────────────────────────────────────────────────────
   Total open ports: 6
 ══════════════════════════════════════════════════════
 
@@ -175,58 +139,61 @@ Each scan generates three report files:
     TXT  → reports/scan_20250315_143022.txt
 ```
 
+Each scan automatically saves 3 report files - JSON for data, CSV for spreadsheets, TXT for quick reading.
+
 ---
 
 ## Project Structure
 
 ```
 netscanner/
-├── netscanner.py      # Main scanner script
-├── README.md          # Documentation
+├── netscanner.py      # The main script - everything lives here
+├── README.md          # You're reading this
 ├── LICENSE            # MIT License
 ├── .gitignore         # Git ignore rules
-└── reports/           # Generated scan reports (auto-created)
-    ├── scan_*.json
-    ├── scan_*.csv
-    └── scan_*.txt
+└── reports/           # Auto-created when you run a scan
 ```
 
 ---
 
-## How It Works
+## Quick Explainer: What Are Ports?
 
-1. **Host Discovery** — Sends ICMP echo requests (ping) or TCP SYN packets to every address in the target subnet. Multi-threading allows scanning an entire /24 network in seconds.
+If your network is an apartment building, each device is a unit and its IP address is the apartment number. **Ports** are the doors inside each apartment - each one has a number, and behind each door is a service doing a specific job:
 
-2. **Port Scanning** — For each discovered host, attempts TCP connections on specified ports. Open ports accept the connection; closed ports refuse it; filtered ports time out.
+| Port | Service | What It Does |
+|------|---------|-------------|
+| 22 | SSH | Remote terminal access |
+| 53 | DNS | Translates domain names to IPs |
+| 80 | HTTP | Web traffic (unencrypted) |
+| 443 | HTTPS | Web traffic (encrypted) |
+| 445 | SMB | File sharing between computers |
+| 3389 | RDP | Remote desktop (Windows) |
 
-3. **Banner Grabbing** — On open ports, the scanner sends protocol-appropriate requests (e.g., HTTP HEAD) and captures the server's response to identify software versions.
-
-4. **Report Generation** — All findings are compiled into structured reports (JSON for automation, CSV for spreadsheets, TXT for quick review).
-
----
-
-## Important Notes
-
-- **Permissions**: ICMP ping may require administrator/root privileges on some systems. Use `--method tcp` as an alternative.
-- **Legal Use**: Only scan networks you own or have explicit permission to scan. Unauthorized scanning may violate laws in your jurisdiction.
-- **Firewalls**: If hosts appear offline with ping, try TCP method (`-m tcp`) as many firewalls block ICMP.
+This tool knocks on those doors and tells you which ones are open.
 
 ---
 
-## Technologies Used
+## Heads Up
 
-- **Python 3** — Core language
-- **socket** — TCP/IP connections and port scanning
-- **ipaddress** — Network address parsing and host enumeration
-- **concurrent.futures** — Thread pool for parallel scanning
-- **argparse** — Command-line interface
-- **subprocess** — ICMP ping execution
+- **Permissions**: Ping might need admin/root on some systems. Use `-m tcp` if it doesn't work.
+- **Legal**: Only scan networks you own or have permission to scan. Scanning other people's networks without consent can get you in trouble.
+- **Firewalls**: If devices show as offline with ping, try TCP mode (`-m tcp`).
+
+---
+
+## Built With
+
+- Python 3 (standard library only - no pip installs needed)
+- `socket` for TCP connections
+- `ipaddress` for network math
+- `concurrent.futures` for multi-threading
+- `argparse` for the CLI
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+MIT - do whatever you want with it.
 
 ---
 
