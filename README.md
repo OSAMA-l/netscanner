@@ -20,18 +20,33 @@ A lightweight, multi-threaded Python tool for discovering active hosts on a netw
 
 ---
 
+## Prerequisites
+
+- **Python 3.8+** — Download from [python.org](https://www.python.org/downloads/)
+- **Git** (optional) — Download from [git-scm.com](https://git-scm.com/downloads)
+
+No external Python packages required — the tool uses only the standard library.
+
 ## Installation
 
+**Option 1: Clone with Git**
+
 ```bash
-# Clone the repository
 git clone https://github.com/osama-l/netscanner.git
 cd netscanner
-
-# No external dependencies required — uses Python standard library only
 python netscanner.py --help
 ```
 
-**Requirements:** Python 3.8 or higher
+**Option 2: Download ZIP (no Git required)**
+
+1. Go to the [repository page](https://github.com/osama-l/netscanner)
+2. Click the green **Code** button → **Download ZIP**
+3. Extract the ZIP and open a terminal in the extracted folder
+
+```bash
+cd netscanner
+python netscanner.py --help
+```
 
 ---
 
