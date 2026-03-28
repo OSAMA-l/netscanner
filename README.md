@@ -199,6 +199,6 @@ MIT - do whatever you want with it.
 
 ## Author
 
-**Osama Al-Shahri**
+**Osama Al-Shehri**
 - Portfolio: [osama-l.github.io](https://osama-l.github.io)
 - Email: o.alshahri@outlook.com
